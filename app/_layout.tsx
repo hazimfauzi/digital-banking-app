@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import '../i18n';
 
 export default function RootLayout() {
   return <Stack>
@@ -11,6 +12,12 @@ export default function RootLayout() {
     />
     <Stack.Screen
       name="(home)"
+      options={{
+        headerShown: false
+      }}
+    />
+    <Stack.Screen
+      name="transfer"
       options={{
         headerShown: false
       }}

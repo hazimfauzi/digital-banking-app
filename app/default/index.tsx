@@ -1,9 +1,7 @@
-import { Button } from "@/components";
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
-
-export default function Index() {
+export default function Default() {
   const { t } = useTranslation();
   return (
     <View
@@ -13,8 +11,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Welcome to Digital Banking App</Text>
-      <Button title={t('login')} isReplace href="/home" />
+      <Text>Default</Text>
     </View>
   );
 }

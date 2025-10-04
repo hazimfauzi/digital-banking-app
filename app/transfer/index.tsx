@@ -1,7 +1,8 @@
-import Button from "@/components/common/Button";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
-export default function Index() {
+export default function Transfer() {
+  const { t } = useTranslation();
   return (
     <View
       style={{
@@ -10,7 +11,6 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Button title={'Transfer'} href="/transfer" />
     </View>
   );
 }

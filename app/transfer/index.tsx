@@ -1,5 +1,6 @@
+import { NumberPad } from "@/components";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 
 export default function Transfer() {
   const { t } = useTranslation();
@@ -11,6 +12,11 @@ export default function Transfer() {
         alignItems: "center",
       }}
     >
+      <NumberPad
+        maxLength={4}
+        onChange={(val) => console.log('Current:', val)}
+        onSubmit={(val) => Alert.alert('PIN Entered', val)}
+      />
     </View>
   );
 }

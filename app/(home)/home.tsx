@@ -1,16 +1,11 @@
-import Button from "@/components/common/Button";
-import { View } from "react-native";
+import { Button, Container, Screen } from "@/components";
 
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Button title={'Transfer'} href="/transfer" />
-    </View>
-  );
+    return (
+        <Screen>
+            <Container>
+                <Button href="/transfer">Transfer</Button>
+            </Container>
+        </Screen>
+    );
 }

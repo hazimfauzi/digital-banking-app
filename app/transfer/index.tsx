@@ -1,23 +1,17 @@
-import { NumberPad } from "@/components";
+import { Container, NumberPad, Screen } from "@/components";
 import { useTranslation } from "react-i18next";
-import { Alert, View } from "react-native";
+import { Alert } from "react-native";
 
 export default function Transfer() {
   const { t } = useTranslation();
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <View style={{ flex: 1 }}></View>
+    <Screen>
+      <Container style={{ flex: 1 }}></Container>
       <NumberPad
         maxLength={4}
         onChange={(val) => console.log('Current:', val)}
         onSubmit={(val) => Alert.alert('PIN Entered', val)}
       />
-    </View>
+    </Screen>
   );
 }

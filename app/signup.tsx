@@ -1,8 +1,8 @@
 import api from '@/api/mockApi';
-import { Button } from '@/components';
+import { Button, Container, FormWrapper, Screen, Text, TextInput } from '@/components';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Text, TextInput, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export default function SignupScreen() {
     const [email, setEmail] = useState('');
@@ -11,31 +11,43 @@ export default function SignupScreen() {
     const handleSignup = async () => {
         try {
             const res = await api.post('/signup', { email, password });
-            Alert.alert('Success', res.data.message);
+            Toast.show({
+                type: 'success',
+                text1: 'Signup Successful',
+                text2: res.data.message
+            });
             router.push('/');
         } catch (err: any) {
-            Alert.alert('Error', err.response?.data?.message || 'Something went wrong');
+            Toast.show({
+                type: 'error',
+                text1: 'Signup Failed',
+                text2: err.response?.data?.message || 'Please try again.'
+            });
         }
     };
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
-            <Text style={{ fontSize: 24, marginBottom: 16 }}>Signup</Text>
-            <TextInput
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
-            />
-            <TextInput
-                placeholder="Password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
-            />
-            <Button title="Signup" onPress={handleSignup} />
-            <Button title="Go to Login" href='/' />
-        </View>
+        <Screen>
+            <FormWrapper>
+                <Container>
+                    <Text style={{ fontSize: 24, marginBottom: 16 }}>Signup</Text>
+                    <TextInput
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={setEmail}
+                        style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
+                    />
+                    <TextInput
+                        placeholder="Password"
+                        secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
+                        style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
+                    />
+                    <Button onPress={handleSignup}>Sign Up</Button>
+                    <Button href='/' mode={'outlined'}>Back</Button>
+                </Container>
+            </FormWrapper>
+        </Screen>
     );
 }

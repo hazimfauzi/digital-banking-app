@@ -1,5 +1,7 @@
+import Container from './Container';
 import Screen from './Screen';
 
 export {
-    Screen
+    Container, Screen
 };
+

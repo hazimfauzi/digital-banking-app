@@ -1,19 +1,21 @@
-import Button from '@/components/common/Button'
+
+import { Button, Container, Screen } from '@/components'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Avatar, Card } from 'react-native-paper'
 
 const Settings = () => {
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-            }}
-        >
-            <Text>Settings</Text>
-            <Button title="Go to Login" isReplace href="/" />
-        </View>
+        <Screen>
+            <Container>
+                <Card.Title
+                    title="Name"
+                    subtitle="email"
+                    left={(props) => <Avatar.Icon {...props} icon='account' />}
+                    style={{ borderRadius: 15, marginBottom: 20, backgroundColor: 'white' }}
+                />
+                <Button navType='replace' href="/">Logout</Button>
+            </Container>
+        </Screen>
     )
 }
 

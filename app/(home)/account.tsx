@@ -1,11 +1,17 @@
+import { Container, Screen, Text } from '@/components'
 import React from 'react'
-import { Text, View } from 'react-native'
 
 const Account = () => {
     return (
-        <View>
-            <Text>Account</Text>
-        </View>
+        <Screen>
+            <Container style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+            }} >
+                <Text>Account</Text>
+            </Container>
+        </Screen>
     )
 }
 

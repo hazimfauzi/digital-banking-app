@@ -6,6 +6,7 @@ export default function DefaultLayout() {
       name="index"
       options={{
         title: "Default",
+        headerTitleAlign: 'center',
       }}
     />
   </Stack>;

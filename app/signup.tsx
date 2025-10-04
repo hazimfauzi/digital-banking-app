@@ -1,20 +1,20 @@
-import api from '@/api/mockApi';
 import { Button, Container, FormWrapper, Screen, Text, TextInput } from '@/components';
+import { useAuth } from '@/context';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import Toast from 'react-native-toast-message';
 
 export default function SignupScreen() {
+    const { signup } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSignup = async () => {
         try {
-            const res = await api.post('/signup', { email, password });
+            await signup(email, password);
             Toast.show({
                 type: 'success',
-                text1: 'Signup Successful',
-                text2: res.data.message
+                text1: 'Account created',
             });
             router.push('/');
         } catch (err: any) {

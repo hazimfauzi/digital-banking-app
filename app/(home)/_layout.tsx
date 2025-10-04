@@ -7,6 +7,7 @@ export default function HomeLayout() {
       name="home"
       options={{
         title: 'Home',
+        headerTitleAlign: 'center',
         tabBarIcon: ({ color }) => <MaterialIcons size={28} name="home" color={color} />,
       }}
     />
@@ -14,6 +15,7 @@ export default function HomeLayout() {
       name="account"
       options={{
         title: 'Account',
+        headerTitleAlign: 'center',
         tabBarIcon: ({ color }) => <MaterialIcons size={28} name="credit-card" color={color} />,
       }}
     />
@@ -21,6 +23,7 @@ export default function HomeLayout() {
       name="settings"
       options={{
         title: 'Settings',
+        headerTitleAlign: 'center',
         tabBarIcon: ({ color }) => <MaterialIcons size={28} name="settings" color={color} />,
       }}
     />

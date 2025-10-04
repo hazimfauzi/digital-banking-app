@@ -12,6 +12,7 @@ export default function Transfer() {
         alignItems: "center",
       }}
     >
+      <View style={{ flex: 1 }}></View>
       <NumberPad
         maxLength={4}
         onChange={(val) => console.log('Current:', val)}

@@ -1,4 +1,5 @@
 import { Route, useRouter } from 'expo-router';
+import { ComponentProps } from 'react';
 import { Button as ButtonRN } from 'react-native';
 
 type ButtonProps = {
@@ -6,9 +7,9 @@ type ButtonProps = {
     href?: Route
     isReplace?: boolean
     onPress?: () => void
-}
+} & ComponentProps<typeof ButtonRN>
 
-const Button = ({ title, href, isReplace, onPress }: ButtonProps) => {
+const Button = ({ title, href, isReplace, onPress, ...rest }: ButtonProps) => {
     const router = useRouter()
 
     const handlePress = () => {
@@ -22,7 +23,11 @@ const Button = ({ title, href, isReplace, onPress }: ButtonProps) => {
         }
     }
 
-    return <ButtonRN title={title} onPress={handlePress} />
+    return <ButtonRN
+        title={title}
+        {...rest}
+        onPress={handlePress}
+    />
 }
 
 export default Button

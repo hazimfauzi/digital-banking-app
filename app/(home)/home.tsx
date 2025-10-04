@@ -1,4 +1,3 @@
-import Button from "@/components/button";
 import { Text, View } from "react-native";
 
 export default function Index() {
@@ -10,8 +9,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Welcome to Digital Banking App</Text>
-      <Button title="Login" isReplace href="/home" />
+      <Text>Home</Text>
     </View>
   );
 }

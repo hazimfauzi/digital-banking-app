@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "digital-banking-app",
+    "name": "Digital Banking App",
     "slug": "digital-banking-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hazimfauzi124.digitalbankingapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +20,9 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.hazimfauzi124.digitalbankingapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
@@ -38,11 +41,23 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#0046FF"
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "296b44dd-8cd4-4cf1-a24b-70d104b6b475"
+      }
     }
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "414003102495",
+    "project_id": "digital-banking-app-34b80",
+    "storage_bucket": "digital-banking-app-34b80.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414003102495:android:e314328bfe68448106e62a",
+        "android_client_info": {
+          "package_name": "com.hazimfauzi124.digitalbankingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQKP3DAZftCB-QVguFDepf1qHmyWZovNM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

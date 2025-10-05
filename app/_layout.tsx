@@ -1,7 +1,10 @@
 import '@/api/mockApi'; // Import the mock API to initialize it
 import { toastConfig } from '@/components/feedback/toastConfig';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { registerForPushNotificationsAsync } from '@/hooks/notification';
+import * as Notifications from 'expo-notifications';
 import { Stack } from "expo-router";
+import { useEffect } from 'react';
 import { View } from 'react-native';
 import {
   ActivityIndicator,
@@ -13,14 +16,40 @@ import '../i18n';
 
 const theme = {
   ...DefaultTheme,
+  dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#112D4E',
-    secondary: '#3F72AF',
+    primary: '#0046FF',
+    secondary: '#E9E9E9',
     surfaceVariant: '#fff',
   },
 };
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+export default function Root() {
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+  }, []);
+
+  return (
+    <AuthProvider>
+      <SafeAreaProvider>
+        <PaperProvider theme={theme}>
+          <RootNavigator />
+          <Toast config={toastConfig} topOffset={150} />
+        </PaperProvider>
+      </SafeAreaProvider>
+    </AuthProvider>
+  );
+}
 
 function RootNavigator() {
   const { session, loading } = useAuth()
@@ -37,9 +66,7 @@ function RootNavigator() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Digital Banking",
-          headerTitleAlign: 'center',
-          headerBackVisible: false,
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -66,21 +93,6 @@ function RootNavigator() {
       />
     </Stack.Protected>
   </Stack>
-}
-
-export default function Root() {
-  // Set up the auth context and render your layout inside of it.
-  return (
-    <AuthProvider>
-      {/* <SplashScreenController /> */}
-      <SafeAreaProvider>
-        <PaperProvider theme={theme}>
-          <RootNavigator />
-          <Toast config={toastConfig} topOffset={150} />
-        </PaperProvider>
-      </SafeAreaProvider>
-    </AuthProvider>
-  );
 }
 
 

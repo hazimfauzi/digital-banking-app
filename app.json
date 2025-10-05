@@ -48,6 +48,12 @@
           "icon": "./assets/images/notification-icon.png",
           "color": "#0046FF"
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
+        }
       ]
     ],
     "experiments": {

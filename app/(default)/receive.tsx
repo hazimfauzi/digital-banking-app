@@ -1,8 +1,7 @@
 import { Container, Screen, Text } from "@/components";
-import { useTranslation } from "react-i18next";
+import React from 'react';
 
-export default function Default() {
-  const { t } = useTranslation();
+const Receive = () => {
   return (
     <Screen>
       <Container style={{
@@ -10,8 +9,10 @@ export default function Default() {
         justifyContent: "center",
         alignItems: "center",
       }}>
-        <Text>Default</Text>
+        <Text>Receive</Text>
       </Container>
     </Screen>
-  );
+  )
 }
+
+export default Receive;

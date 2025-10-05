@@ -7,7 +7,7 @@ type Props = ComponentProps<typeof View>;
 const Container = ({ children, style, ...props }: Props) => {
     return (
         <View
-            style={[{ padding: 20 }, style]}
+            style={[{ padding: 10 }, style]}
             {...props}
         >
             {children}

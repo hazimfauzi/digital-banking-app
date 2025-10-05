@@ -20,8 +20,8 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#0046FF',
-    secondary: '#E9E9E9',
-    surfaceVariant: '#fff',
+    secondary: '#FF8040',
+    surfaceVariant: '#E9E9E9',
   },
 };
 
@@ -61,36 +61,22 @@ function RootNavigator() {
     );
   }
 
-  return <Stack>
+  return <Stack screenOptions={{
+    headerTitleStyle: {
+      fontWeight: "600",
+      fontSize: 18,
+    },
+    headerShown: false,
+    headerBackVisible: false,
+    headerTitleAlign: "center",
+  }} >
     <Stack.Protected guard={!session}>
-      <Stack.Screen
-        name="index"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="signup"
-        options={{
-          title: "Sign Up",
-          headerTitleAlign: 'center',
-          headerBackVisible: false,
-        }}
-      />
+      <Stack.Screen name="index" />
+      <Stack.Screen name="signup" />
     </Stack.Protected>
     <Stack.Protected guard={!!session}>
-      <Stack.Screen
-        name="(home)"
-        options={{
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
-        name="transfer"
-        options={{
-          headerShown: false
-        }}
-      />
+      <Stack.Screen name="(home)" />
+      <Stack.Screen name="(default)" />
     </Stack.Protected>
   </Stack>
 }

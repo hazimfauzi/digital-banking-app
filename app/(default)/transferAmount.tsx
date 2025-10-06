@@ -1,11 +1,13 @@
 import { Button, Container, Screen, Text, TextInput } from "@/components";
+import { useAuth } from "@/context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Avatar, Card } from "react-native-paper";
+import { Avatar, Card, HelperText } from "react-native-paper";
 
 const TransferAmountScreen = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const { contactName, contactPhone } = useLocalSearchParams<{
     contactName: string;
     contactPhone?: string;
@@ -13,17 +15,36 @@ const TransferAmountScreen = () => {
 
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
-  const [balance] = useState(2500.75); // mock balance
+  const balance = user?.totalBalance ?? 0;
+
+  const formatAmount = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) return "0.00";
+    const num = parseFloat(digits) / 100;
+    return num.toFixed(2);
+  };
+
+  const handleAmountChange = (text: string) => {
+    const formatted = formatAmount(text);
+    setAmount(formatted);
+  };
+
+  const numericAmount = parseFloat(amount) || 0;
+  const hasAmountError = numericAmount > balance;
 
   const handleContinue = () => {
-    if (!amount || parseFloat(amount) <= 0) {
+    if (!numericAmount || numericAmount <= 0) {
       alert("Please enter a valid amount");
       return;
     }
 
-    // Pass data to confirmation or authentication screen
+    if (hasAmountError) {
+      alert(`Insufficient balance. You have RM ${balance.toFixed(2)} only.`);
+      return;
+    }
+
     router.push({
-      pathname: '/transferConfirm',
+      pathname: "/transferConfirm",
       params: {
         contactName,
         contactPhone,
@@ -49,7 +70,7 @@ const TransferAmountScreen = () => {
           >
             <Card.Title
               title={contactName || "Unknown Contact"}
-              subtitle={`${contactPhone}`}
+              subtitle={contactPhone || "No phone"}
               left={(props) => <Avatar.Icon {...props} icon="account" />}
             />
           </Card>
@@ -57,26 +78,38 @@ const TransferAmountScreen = () => {
 
         {/* Current Balance */}
         <View style={{ marginBottom: 20 }}>
-          <Text variant={'labelMedium'} style={{ color: "#888" }}>Current Balance</Text>
-          <Text variant={'bodyLarge'}>
+          <Text variant="labelMedium" style={{ color: "#888" }}>
+            Current Balance
+          </Text>
+          <Text variant="bodyLarge" style={{ fontWeight: "600" }}>
             RM {balance.toFixed(2)}
           </Text>
         </View>
 
-        <Text variant={'labelMedium'} style={{ color: "#888" }}>
+        {/* Amount Input */}
+        <Text variant="labelMedium" style={{ color: "#888" }}>
           Enter Amount
         </Text>
-        <TextInput
-          value={amount}
-          onChangeText={setAmount}
-          placeholder="0.00"
-          keyboardType="numeric"
-          style={{
-            marginBottom: 30,
-          }}
-        />
+        <View style={{ marginBottom: 20 }}>
+          <TextInput
+            value={amount}
+            onChangeText={handleAmountChange}
+            placeholder="0.00"
+            keyboardType="numeric"
+            error={hasAmountError}
+            style={{
+              fontSize: 32,
+              fontWeight: "700",
+              textAlign: "center",
+            }}
+          />
+          <HelperText type="error" visible={hasAmountError}>
+            Insufficient balance. Please enter a smaller amount.
+          </HelperText>
+        </View>
 
-        <Text variant={'labelMedium'} style={{ color: "#888" }}>
+        {/* Note Input */}
+        <Text variant="labelMedium" style={{ color: "#888" }}>
           Note (optional)
         </Text>
         <TextInput
@@ -88,9 +121,8 @@ const TransferAmountScreen = () => {
           }}
         />
 
-        <Button
-          onPress={handleContinue}
-        >Continue</Button>
+        {/* Continue Button */}
+        <Button onPress={handleContinue}>Continue</Button>
       </Container>
     </Screen>
   );

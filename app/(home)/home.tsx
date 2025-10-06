@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/hooks/api/useUser";
 import { router } from "expo-router";
 import React from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 
 const Home = () => {
     const { user } = useAuth();
@@ -33,14 +33,18 @@ const Home = () => {
         );
     }
 
+    const recentTransactions = data.transactions?.slice(0, 5) || [];
+
     return (
         <Screen>
             <Container>
+                {/* Balance Card */}
                 <View
                     style={{
                         backgroundColor: "#ecf3ff",
                         padding: 30,
                         borderRadius: 10,
+                        marginBottom: 24,
                     }}
                 >
                     <View style={{ marginBottom: 10, justifyContent: "center", alignItems: "center" }}>
@@ -82,6 +86,54 @@ const Home = () => {
                         />
                     </View>
                 </View>
+
+                {/* Recent Transactions */}
+                <Text variant="titleMedium" style={{ fontWeight: "700", marginBottom: 12 }}>
+                    Recent Transactions
+                </Text>
+
+                {recentTransactions.length > 0 ? (
+                    <FlatList
+                        data={recentTransactions}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <View
+                                style={{
+                                    backgroundColor: "#f5f6fa",
+                                    padding: 16,
+                                    borderRadius: 12,
+                                    marginBottom: 12,
+                                    borderWidth: 1,
+                                    borderColor: "#e5e5e5",
+                                }}
+                            >
+                                <Text style={{ fontWeight: "600" }}>
+                                    {item.type === "debit" ? "Sent" : "Received"} RM {item.amount.toFixed(2)}
+                                </Text>
+                                {item.note && <Text style={{ color: "#666" }}>Note: {item.note}</Text>}
+                                <Text style={{ color: "#888", fontSize: 12 }}>
+                                    {item.to?.name || item.from?.name} - {item.to?.phone || item.from?.phone}
+                                </Text>
+                                <Text style={{ color: "#888", fontSize: 12 }}>
+                                    {new Date(item.date).toLocaleString()}
+                                </Text>
+                            </View>
+                        )}
+                    />
+                ) : (
+                    <View
+                        style={{
+                            backgroundColor: "#f9f9f9",
+                            borderRadius: 12,
+                            padding: 20,
+                            marginBottom: 24,
+                        }}
+                    >
+                        <Text style={{ color: "#999", textAlign: "center" }}>
+                            No recent transactions found.
+                        </Text>
+                    </View>
+                )}
             </Container>
         </Screen>
     );

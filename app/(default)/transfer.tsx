@@ -100,6 +100,7 @@ const TransferScreen = () => {
                             <TouchableOpacity
                                 onPress={() => handleSelectRecent(item)}
                                 style={{
+                                    width: 100,
                                     backgroundColor: "#fff",
                                     paddingVertical: 12,
                                     paddingHorizontal: 10,

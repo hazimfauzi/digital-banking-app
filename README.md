@@ -18,7 +18,9 @@ This is Take Home Assessmeont for Payment Transfer Module with Biometrics Authen
    yarn web
    ```
 
-Download the apk file inside apk folder.
+## Download
+https://expo.dev/artifacts/eas/47Ex8xVzdYTEqzgyGFwSVk.apk
+
 ## Features
 
 - Authentication

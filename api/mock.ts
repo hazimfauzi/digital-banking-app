@@ -1,4 +1,4 @@
-import { UserData, getUserData, setUserData } from "@/api/storage";
+import { Transaction, UserData, getUserData, setUserData } from "@/api/storage";
 import MockAdapter from "axios-mock-adapter";
 import { defaultApi } from "./axiosClient";
 
@@ -17,8 +17,9 @@ mock.onPost("/signup").reply(async (config) => {
         phone,
         pin,
         biometricEnabled: false,
-        totalBalance: 5000, // 💵 give initial balance
+        totalBalance: 5000,
         recentContacts: [],
+        transactions: [],
     };
 
     await setUserData(phone, user);
@@ -54,9 +55,8 @@ mock.onGet(/\/user\/\d+/).reply(async (config) => {
     return [200, { user }];
 });
 
-// ✅ Transfer
 mock.onPost("/transfer").reply(async (config) => {
-    const { fromPhone, toName, toPhone, amount } = JSON.parse(config.data);
+    const { fromPhone, toName, toPhone, amount, note } = JSON.parse(config.data);
     const amt = Number(amount);
 
     const sender = await getUserData(fromPhone);
@@ -68,29 +68,57 @@ mock.onPost("/transfer").reply(async (config) => {
 
     const receiver = await getUserData(toPhone);
 
-    // Update sender balance
+    // --- 🧾 Create transaction entries ---
+    const transactionId = randomId();
+    const timestamp = new Date().toISOString();
+
+    const senderTx: Transaction = {
+        id: transactionId,
+        type: "debit",
+        amount: amt,
+        date: timestamp,
+        note,
+        to: { name: toName, phone: toPhone },
+    };
+
+    const receiverTx: Transaction = {
+        id: transactionId,
+        type: "credit",
+        amount: amt,
+        date: timestamp,
+        note,
+        from: { name: sender.name, phone: fromPhone },
+    };
+
+    // --- 🏦 Update sender data ---
+    const updatedSenderTxs = [senderTx, ...(sender.transactions || [])].slice(0, 20);
     await setUserData(fromPhone, {
         totalBalance: sender.totalBalance - amt,
         recentContacts: [
             { name: toName, phone: toPhone },
             ...sender.recentContacts.filter((c) => c.phone !== toPhone),
         ].slice(0, 5),
+        transactions: updatedSenderTxs,
     });
 
-    // If receiver exists, update balance
+    // --- 👤 Update receiver if exists ---
     if (receiver) {
+        const updatedReceiverTxs = [receiverTx, ...(receiver.transactions || [])].slice(0, 20);
         await setUserData(toPhone, {
             totalBalance: receiver.totalBalance + amt,
+            transactions: updatedReceiverTxs,
         });
     }
 
-    const success = Math.random() > 0.1;
+    // --- 🔄 Simulate network success/fail ---
+    // const success = Math.random() > 0.1;
+    const success = true;
     if (success) {
         return [
             200,
             {
                 success: true,
-                transactionId: randomId(),
+                transactionId,
                 message: "Transfer successful",
                 newBalance: sender.totalBalance - amt,
             },
@@ -99,6 +127,7 @@ mock.onPost("/transfer").reply(async (config) => {
         return [500, { success: false, message: "Transfer failed" }];
     }
 });
+
 
 // ✅ Get Recent Contacts
 mock.onGet(/\/contacts\/\d+/).reply(async (config) => {

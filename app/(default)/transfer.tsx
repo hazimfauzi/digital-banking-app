@@ -4,6 +4,7 @@ import { useAuth } from "@/context";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native";
+import { Avatar } from "react-native-paper";
 
 type Contact = {
     name: string;
@@ -85,29 +86,48 @@ const TransferScreen = () => {
                 {loading ? (
                     <ActivityIndicator size="small" color="#27496D" style={{ marginVertical: 20 }} />
                 ) : recentContacts.length > 0 ? (
-                    <FlatList
+                    <View><FlatList
                         data={recentContacts}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.phone}
+                        contentContainerStyle={{
+                            paddingVertical: 8,
+                            paddingRight: 12,
+                        }}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 onPress={() => handleSelectRecent(item)}
                                 style={{
-                                    backgroundColor: "#f5f6fa",
-                                    padding: 14,
-                                    borderRadius: 12,
+                                    backgroundColor: "#fff",
+                                    paddingVertical: 12,
+                                    paddingHorizontal: 10,
+                                    borderRadius: 16,
                                     marginRight: 12,
                                     borderWidth: 1,
                                     borderColor: "#e5e5e5",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    shadowColor: "#000",
+                                    shadowOpacity: 0.05,
+                                    shadowOffset: { width: 0, height: 1 },
+                                    shadowRadius: 3,
+                                    elevation: 1,
                                 }}
+                                activeOpacity={0.8}
                             >
-                                <Text style={{ fontWeight: "600" }}>{item.name}</Text>
-                                <Text style={{ color: "#666", fontSize: 12 }}>{item.phone}</Text>
+                                <Avatar.Text size={30} label={item.name[0]} style={{ marginBottom: 10 }} />
+                                <Text
+                                    style={{ fontWeight: "600", fontSize: 13, color: "#333", marginBottom: 2 }}
+                                    numberOfLines={1}
+                                >
+                                    {item.name}
+                                </Text>
+                                <Text style={{ color: "#888", fontSize: 11 }}>{item.phone}</Text>
                             </TouchableOpacity>
                         )}
-                        style={{ marginBottom: 24 }}
-                    />
+                        style={{ marginBottom: 24 }} />
+                    </View>
                 ) : (
                     <View
                         style={{

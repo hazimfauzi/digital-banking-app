@@ -2,6 +2,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type Contact = { name: string; phone: string };
 
+export type Transaction = {
+    id: string;
+    type: "debit" | "credit"; // sent or received
+    amount: number;
+    date: string; // ISO timestamp
+    note?: string;
+    to?: {
+        name: string;
+        phone: string;
+    };
+    from?: {
+        name: string;
+        phone: string;
+    };
+};
+
+
 export type UserData = {
     name: string;
     phone: string;
@@ -9,6 +26,7 @@ export type UserData = {
     biometricEnabled: boolean;
     totalBalance: number;
     recentContacts: Contact[];
+    transactions: Transaction[];
 };
 
 const getUserKey = (phone: string) => `@user:${phone}`;

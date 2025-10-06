@@ -1,27 +1,42 @@
-import { Container, Screen, Text } from "@/components";
+import { defaultApi } from "@/api/axiosClient";
+import { Button, Container, IconButton, Screen, Text, TextInput } from "@/components";
+import { useAuth } from "@/context";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { FlatList, TextInput, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native";
 
-type RecentContact = {
-    id?: string; // optional if manual
+type Contact = {
     name: string;
     phone: string;
 };
 
-const mockRecentContacts: RecentContact[] = [
-    { id: "1", name: "Alice Tan", phone: "0123456789" },
-    { id: "2", name: "Bob Lee", phone: "0198765432" },
-];
-
 const TransferScreen = () => {
     const router = useRouter();
+    const { user } = useAuth();
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
+    const [recentContacts, setRecentContacts] = useState<Contact[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchContacts = async () => {
+            if (!user?.phone) return;
+            try {
+                setLoading(true);
+                const res = await defaultApi.get(`/contacts/${user.phone}`);
+                setRecentContacts(res.data.contacts || []);
+            } catch (error) {
+                console.error("Failed to load contacts:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchContacts();
+    }, [user?.phone]);
 
     const handleNext = () => {
         if (!name || !phone) {
-            alert("Please enter recipient name and phone");
+            alert("Please enter recipient name and phone number");
             return;
         }
 
@@ -31,7 +46,7 @@ const TransferScreen = () => {
         });
     };
 
-    const handleSelectRecent = (contact: RecentContact) => {
+    const handleSelectRecent = (contact: Contact) => {
         router.push({
             pathname: "/transferAmount",
             params: { contactName: contact.name, contactPhone: contact.phone },
@@ -44,93 +59,93 @@ const TransferScreen = () => {
 
     return (
         <Screen>
-            <Container style={{ flex: 1, padding: 16 }}>
+            <Container style={{ flex: 1, paddingVertical: 16 }}>
+                {/* Pick Contacts Button */}
+                <View
+                    style={{
+                        flexWrap: "nowrap",
+                        flexDirection: "row",
+                        marginBottom: 20,
+                    }}
+                >
+                    <IconButton
+                        label="Contacts"
+                        icon={"phone"}
+                        size={35}
+                        style={{ marginHorizontal: 20 }}
+                        onPress={handlePickFromContacts}
+                    />
+                </View>
+
                 {/* Recent Contacts */}
-                <Text style={{ fontSize: 18, fontWeight: "700", marginBottom: 12 }}>
+                <Text variant="titleMedium" style={{ fontWeight: "700", marginBottom: 12 }}>
                     Recent Contacts
                 </Text>
-                <FlatList
-                    data={mockRecentContacts}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id ?? item.phone}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            onPress={() => handleSelectRecent(item)}
-                            style={{
-                                backgroundColor: "#f0f0f0",
-                                padding: 12,
-                                borderRadius: 12,
-                                marginRight: 12,
-                            }}
-                        >
-                            <Text style={{ fontWeight: "600" }}>{item.name}</Text>
-                            <Text style={{ color: "#666", fontSize: 12 }}>{item.phone}</Text>
-                        </TouchableOpacity>
-                    )}
-                    style={{ marginBottom: 24 }}
-                />
+
+                {loading ? (
+                    <ActivityIndicator size="small" color="#27496D" style={{ marginVertical: 20 }} />
+                ) : recentContacts.length > 0 ? (
+                    <FlatList
+                        data={recentContacts}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item) => item.phone}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                onPress={() => handleSelectRecent(item)}
+                                style={{
+                                    backgroundColor: "#f5f6fa",
+                                    padding: 14,
+                                    borderRadius: 12,
+                                    marginRight: 12,
+                                    borderWidth: 1,
+                                    borderColor: "#e5e5e5",
+                                }}
+                            >
+                                <Text style={{ fontWeight: "600" }}>{item.name}</Text>
+                                <Text style={{ color: "#666", fontSize: 12 }}>{item.phone}</Text>
+                            </TouchableOpacity>
+                        )}
+                        style={{ marginBottom: 24 }}
+                    />
+                ) : (
+                    <View
+                        style={{
+                            backgroundColor: "#f9f9f9",
+                            borderRadius: 12,
+                            padding: 20,
+                            marginBottom: 24,
+                        }}
+                    >
+                        <Text style={{ color: "#999", textAlign: "center" }}>
+                            No recent contacts found.
+                        </Text>
+                    </View>
+                )}
 
                 {/* Manual Entry */}
-                <Text style={{ fontSize: 18, fontWeight: "700", marginBottom: 12 }}>
+                <Text variant="titleMedium" style={{ fontWeight: "700", marginBottom: 12 }}>
                     Enter Recipient
                 </Text>
+
                 <TextInput
+                    label="Name"
                     value={name}
                     onChangeText={setName}
                     placeholder="Name"
-                    style={{
-                        borderWidth: 1,
-                        borderColor: "#ddd",
-                        borderRadius: 12,
-                        padding: 12,
-                        marginBottom: 12,
-                    }}
+                    style={{ marginBottom: 12 }}
                 />
+
                 <TextInput
+                    label="Phone Number"
                     value={phone}
                     onChangeText={setPhone}
                     placeholder="Phone Number"
                     keyboardType="phone-pad"
-                    style={{
-                        borderWidth: 1,
-                        borderColor: "#ddd",
-                        borderRadius: 12,
-                        padding: 12,
-                        marginBottom: 24,
-                    }}
+                    style={{ marginBottom: 20 }}
                 />
 
-                {/* Pick from Contacts */}
-                <TouchableOpacity
-                    onPress={handlePickFromContacts}
-                    style={{
-                        backgroundColor: "#f0f0f0",
-                        padding: 14,
-                        borderRadius: 12,
-                        alignItems: "center",
-                        marginBottom: 24,
-                    }}
-                >
-                    <Text style={{ fontWeight: "600", color: "#27496D" }}>
-                        Pick from Contacts
-                    </Text>
-                </TouchableOpacity>
-
-                {/* Next Button */}
-                <TouchableOpacity
-                    onPress={handleNext}
-                    style={{
-                        backgroundColor: "#27496D",
-                        paddingVertical: 16,
-                        borderRadius: 12,
-                        alignItems: "center",
-                    }}
-                >
-                    <Text style={{ color: "#fff", fontWeight: "600", fontSize: 16 }}>
-                        Next
-                    </Text>
-                </TouchableOpacity>
+                <Button onPress={handleNext}>Next</Button>
             </Container>
         </Screen>
     );

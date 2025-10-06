@@ -42,6 +42,11 @@ const TransferScreen = () => {
             return;
         }
 
+        if (!isValidPhoneNumber(phone)) {
+            alert("Please enter valid phone number");
+            return;
+        }
+
         router.push({
             pathname: "/transferAmount",
             params: { contactName: name, contactPhone: phone },

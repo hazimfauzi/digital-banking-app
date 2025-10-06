@@ -26,6 +26,15 @@ const SignupScreen = () => {
             return;
         }
 
+        if (!isValidPhoneNumber(phone)) {
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid Phone Number',
+                text2: 'Please fill in valid phone number.'
+            });
+            return;
+        }
+
         try {
             setLoading(true);
             await signup(name, phone, pin);

@@ -35,7 +35,7 @@ const BiometricPrompt = () => {
             Toast.show({
                 type: 'success',
                 text1: 'Success',
-                text2: 'Biometric login enabled!'
+                text2: 'Biometric authentication enabled!'
             });
             setVisible(false);
         } catch (err) {
@@ -43,7 +43,7 @@ const BiometricPrompt = () => {
             Toast.show({
                 type: 'error',
                 text1: 'Error',
-                text2: 'Failed to enable biometric login'
+                text2: 'Failed to enable biometric authentication'
             });
         }
     };

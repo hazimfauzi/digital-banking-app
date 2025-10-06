@@ -2,6 +2,7 @@ import { Button, Container, Screen, Text, TextInput } from "@/components";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { View } from "react-native";
 import Toast from "react-native-toast-message";
 
 const LoginScreen = () => {
@@ -30,7 +31,7 @@ const LoginScreen = () => {
                 text1: 'Success',
                 text2: 'Logged in successfully!'
             });
-            router.replace('/home'); // Redirect to home after login
+            router.replace('/home');
         } catch (err: any) {
             Toast.show({
                 type: 'error',
@@ -45,10 +46,14 @@ const LoginScreen = () => {
     return (
         <Screen>
             <Container style={{ flex: 1, justifyContent: "center", padding: 20 }}>
-                <Text variant={'titleLarge'} style={{ marginBottom: 24 }}>
-                    Welcome Back 👋
-                </Text>
-
+                <View style={{ alignItems: 'center' }}>
+                    <Text variant={'titleLarge'} >
+                        Welcome to
+                    </Text>
+                    <Text variant={'titleLarge'} style={{ marginBottom: 44 }}>
+                        Digital Banking App 👋
+                    </Text>
+                </View>
                 <TextInput
                     label="Phone Number"
                     placeholder="e.g. 60123456789"

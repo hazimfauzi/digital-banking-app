@@ -67,7 +67,7 @@ const Settings = () => {
                     }}
                 >
                     <Card.Title
-                        title="Biometric Login"
+                        title="Biometric Authentication"
                         subtitle="Use fingerprint or face recognition for authentication"
                         right={() => (
                             <Switch

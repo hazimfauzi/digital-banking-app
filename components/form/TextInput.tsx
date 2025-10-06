@@ -1,12 +1,9 @@
 import React, { ComponentProps } from 'react';
 import { TextInput as TextInputRNP } from 'react-native-paper';
 
-type TextInputRNPProps = ComponentProps<typeof TextInputRNP>;
+type Props = ComponentProps<typeof TextInputRNP>;
 
-type ButtonProps = {
-} & TextInputRNPProps;
-
-const TextInput = ({ mode, ...props }: ButtonProps) => {
+const TextInput = ({ mode, ...props }: Props) => {
     return (
         <TextInputRNP
             {...props}

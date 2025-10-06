@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     inner: {
         flex: 1,
         paddingBottom: 25,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#f7f7f7',
     },
 });
 

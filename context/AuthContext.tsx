@@ -1,18 +1,18 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import api from '../api/mockApi';
+import { api } from "@/api/mock";
+import { UserData } from "@/api/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-type User = { email: string; password: string };
 type AuthContextType = {
-    session: User | null;
+    user: UserData | null;
     loading: boolean;
-    login: (email: string, password: string) => Promise<void>;
-    signup: (email: string, password: string) => Promise<void>;
+    login: (phone: string, pin: string) => Promise<void>;
+    signup: (name: string, phone: string, pin: string) => Promise<void>;
     logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
-    session: null,
+    user: null,
     loading: true,
     login: async () => { },
     signup: async () => { },
@@ -20,37 +20,53 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [session, setSession] = useState<User | null>(null);
+    const [user, setUser] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 
+    // Load stored session
     useEffect(() => {
         const load = async () => {
-            const saved = await AsyncStorage.getItem('session');
-            if (saved) setSession(JSON.parse(saved));
+            const saved = await AsyncStorage.getItem("session");
+            if (saved) setUser(JSON.parse(saved));
             setLoading(false);
         };
         load();
     }, []);
 
-    const login = async (email: string, password: string) => {
-        const res = await api.post('/login', { email, password });
-        await AsyncStorage.setItem('session', JSON.stringify(res.data.user));
-        setSession(res.data.user);
+    // 🔐 Login
+    const login = async (phone: string, pin: string) => {
+        try {
+            const res = await api.post("/login", { phone, pin });
+            const userData = res.data.user;
+            await AsyncStorage.setItem("session", JSON.stringify(userData));
+            setUser(userData);
+        } catch (err: any) {
+            const message = err.response?.data?.message || "Login failed";
+            throw new Error(message);
+        }
     };
 
-    const signup = async (email: string, password: string) => {
-        const res = await api.post('/signup', { email, password });
-        await AsyncStorage.setItem('session', JSON.stringify(res.data.user));
-        setSession(res.data.user);
+    // 🆕 Signup
+    const signup = async (name: string, phone: string, pin: string) => {
+        try {
+            const res = await api.post("/signup", { name, phone, pin });
+            const userData = res.data.user;
+            await AsyncStorage.setItem("session", JSON.stringify(userData));
+            setUser(userData);
+        } catch (err: any) {
+            const message = err.response?.data?.message || "Signup failed";
+            throw new Error(message);
+        }
     };
 
+    // 🚪 Logout
     const logout = async () => {
-        await AsyncStorage.removeItem('session');
-        setSession(null);
+        await AsyncStorage.removeItem("session");
+        setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ session, loading, login, signup, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
             {children}
         </AuthContext.Provider>
     );

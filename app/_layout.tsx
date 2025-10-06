@@ -1,7 +1,8 @@
-import '@/api/mockApi'; // Import the mock API to initialize it
+import '@/api/mock'; // Import the mock API to initialize it
 import { toastConfig } from '@/components/feedback/toastConfig';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { registerForPushNotificationsAsync } from '@/hooks/notification';
+import { QueryProvider } from '@/provider/QueryProvider';
 import * as Notifications from 'expo-notifications';
 import { Stack } from "expo-router";
 import { useEffect } from 'react';
@@ -40,19 +41,21 @@ export default function Root() {
   }, []);
 
   return (
-    <AuthProvider>
-      <SafeAreaProvider>
-        <PaperProvider theme={theme}>
-          <RootNavigator />
-          <Toast config={toastConfig} topOffset={150} />
-        </PaperProvider>
-      </SafeAreaProvider>
-    </AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <SafeAreaProvider>
+          <PaperProvider theme={theme}>
+            <RootNavigator />
+            <Toast config={toastConfig} topOffset={150} />
+          </PaperProvider>
+        </SafeAreaProvider>
+      </AuthProvider>
+    </QueryProvider>
   );
 }
 
 function RootNavigator() {
-  const { session, loading } = useAuth()
+  const { user, loading } = useAuth()
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -70,11 +73,11 @@ function RootNavigator() {
     headerBackVisible: false,
     headerTitleAlign: "center",
   }} >
-    <Stack.Protected guard={!session}>
+    <Stack.Protected guard={!user}>
       <Stack.Screen name="index" />
       <Stack.Screen name="signup" />
     </Stack.Protected>
-    <Stack.Protected guard={!!session}>
+    <Stack.Protected guard={!!user}>
       <Stack.Screen name="(home)" />
       <Stack.Screen name="(default)" />
     </Stack.Protected>

@@ -1,91 +1,76 @@
-import api from '@/api/mockApi';
-import { Button, Container, FormWrapper, Screen, Text, TextInput } from '@/components';
-import { useAuth } from '@/context';
-import * as Notifications from 'expo-notifications';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { Button, Container, Screen, Text, TextInput } from "@/components";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Alert } from "react-native";
 
 const LoginScreen = () => {
-    const { login, session } = useAuth();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const router = useRouter();
+    const { login } = useAuth();
+
+    const [phone, setPhone] = useState("");
+    const [pin, setPin] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
-        try {
-            setLoading(true)
-            const res = await api.post('/login', { email, password });
-            await login(email, password);
-            Toast.show({
-                type: 'success',
-                text1: 'Login Successful',
-                text2: `Welcome back, ${res.data.user.email}!`
-            });
-            router.push('/home');
-        } catch (err: any) {
-            Toast.show({
-                type: 'error',
-                text1: 'Login Failed',
-                text2: err.response?.data?.message || 'Please try again.'
-            });
-        } finally {
-            setLoading(false)
+        if (!phone || !pin) {
+            Alert.alert("Missing Fields", "Please enter your phone number and PIN.");
+            return;
         }
-    };
 
-    const sendTestNotification = async () => {
-        await Notifications.scheduleNotificationAsync({
-            content: {
-                title: "Hello 👋",
-                body: "This is a test notification",
-            },
-            trigger: null
-        });
-        Toast.show({
-            type: 'success',
-            text1: 'Notification scheduled',
-            text2: 'Check your device in 2 seconds',
-        })
+        try {
+            setLoading(true);
+            await login(phone, pin);
+            Alert.alert("Success", "Logged in successfully!");
+            router.replace('/home'); // Redirect to home after login
+        } catch (err: any) {
+            Alert.alert("Login Failed", err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <Screen>
-            <FormWrapper>
-                <Container>
-                    <View style={styles.header}>
-                        <Text variant={'headlineLarge'}>Welcome to</Text>
-                        <Text variant={'headlineMedium'}>Digital Banking App</Text>
-                    </View>
-                    <TextInput
-                        label="Email"
-                        value={email}
-                        onChangeText={setEmail}
-                        style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
-                    />
-                    <TextInput
-                        label="Password"
-                        secureTextEntry
-                        value={password}
-                        onChangeText={setPassword}
-                        style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
-                    />
-                    <Button onPress={handleLogin} loading={loading}>Sign In</Button>
-                    <Button onPress={sendTestNotification} loading={loading}>Sign In</Button>
-                    <Button href='/signup' mode={'text'}>Sign Up</Button>
-                </Container>
-            </FormWrapper>
+            <Container style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+                <Text variant={'titleLarge'} style={{ marginBottom: 24 }}>
+                    Welcome Back 👋
+                </Text>
+
+                <TextInput
+                    label="Phone Number"
+                    placeholder="e.g. 0123456789"
+                    keyboardType="phone-pad"
+                    value={phone}
+                    onChangeText={setPhone}
+                    style={{ marginBottom: 16 }}
+                />
+
+                <TextInput
+                    label="PIN"
+                    placeholder="Enter 4-digit PIN"
+                    secureTextEntry
+                    value={pin}
+                    onChangeText={setPin}
+                    style={{ marginBottom: 24 }}
+                />
+
+                <Button onPress={handleLogin} loading={loading}>{loading ? "Logging in..." : "Login"}</Button>
+
+                <Text
+                    style={{
+                        textAlign: "center",
+                        marginTop: 24,
+                    }}
+                >
+                    Don’t have an account?{" "}
+                    <Text onPress={() => router.push('/signup')} style={{ color: "#27496D" }}>
+                        Sign up
+                    </Text>
+                </Text>
+            </Container>
         </Screen>
     );
-}
-
-const styles = StyleSheet.create({
-    header: {
-        alignItems: 'center',
-        marginBottom: 20,
-    }
-})
+};
 
 export default LoginScreen;
-

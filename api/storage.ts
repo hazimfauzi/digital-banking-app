@@ -1,12 +1,49 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const USERS_KEY = 'users';
+export type Contact = { name: string; phone: string };
 
-export async function getUsers() {
-    const json = await AsyncStorage.getItem(USERS_KEY);
-    return json ? JSON.parse(json) : [];
-}
+export type UserData = {
+    name: string;
+    phone: string;
+    pin: string;
+    biometricEnabled: boolean;
+    totalBalance: number;
+    recentContacts: Contact[];
+};
 
-export async function saveUsers(users: any[]) {
-    await AsyncStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
+const getUserKey = (phone: string) => `@user:${phone}`;
+
+// Get a single user's data
+export const getUserData = async (phone: string): Promise<UserData | null> => {
+    const data = await AsyncStorage.getItem(getUserKey(phone));
+    return data ? JSON.parse(data) : null;
+};
+
+// Save or update a user's data
+export const setUserData = async (phone: string, newData: Partial<UserData>) => {
+    const current = (await getUserData(phone)) || {
+        name: "",
+        phone,
+        pin: "",
+        biometricEnabled: false,
+        totalBalance: 0,
+        recentContacts: [],
+    };
+    const merged = { ...current, ...newData };
+    await AsyncStorage.setItem(getUserKey(phone), JSON.stringify(merged));
+};
+
+// Remove a user’s data
+export const clearUserData = async (phone: string) => {
+    await AsyncStorage.removeItem(getUserKey(phone));
+};
+
+// Get all users
+export const getAllUsers = async (): Promise<UserData[]> => {
+    const keys = await AsyncStorage.getAllKeys();
+    const userKeys = keys.filter((k) => k.startsWith("@user:"));
+    const stores = await AsyncStorage.multiGet(userKeys);
+    return stores
+        .map(([, value]) => (value ? JSON.parse(value) : null))
+        .filter(Boolean);
+};

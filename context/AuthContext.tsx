@@ -9,6 +9,7 @@ type AuthContextType = {
     login: (phone: string, pin: string) => Promise<void>;
     signup: (name: string, phone: string, pin: string) => Promise<void>;
     logout: () => Promise<void>;
+    updateUser: (updatedData: Partial<UserData>) => Promise<void>; // 🆕
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextType>({
     login: async () => { },
     signup: async () => { },
     logout: async () => { },
+    updateUser: async () => { }, // 🆕
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -59,6 +61,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    // 🧠 Update user (profile or biometric)
+    const updateUser = async (updatedData: Partial<UserData>) => {
+        if (!user) return;
+        const newUser = { ...user, ...updatedData };
+        setUser(newUser);
+        await AsyncStorage.setItem("session", JSON.stringify(newUser));
+    };
+
     // 🚪 Logout
     const logout = async () => {
         await AsyncStorage.removeItem("session");
@@ -66,7 +76,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+        <AuthContext.Provider
+            value={{ user, loading, login, signup, logout, updateUser }}
+        >
             {children}
         </AuthContext.Provider>
     );

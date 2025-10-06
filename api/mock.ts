@@ -113,6 +113,23 @@ mock.onGet(/\/contacts\/\d+/).reply(async (config) => {
     return [200, { contacts: user.recentContacts }];
 });
 
+// ✅ Update profile (name or pin)
+mock.onPost("/user/update").reply(async (config) => {
+    const { phone, name, pin } = JSON.parse(config.data);
+
+    const user = await getUserData(phone);
+    if (!user) return [404, { message: "User not found" }];
+
+    await setUserData(phone, {
+        name: name || user.name,
+        pin: pin || user.pin,
+    });
+
+    const updated = await getUserData(phone);
+    return [200, { success: true, user: updated }];
+});
+
+
 console.log("✅ Mock API initialized with local storage backend");
 
 export default api;

@@ -48,7 +48,7 @@ const SignupScreen = () => {
 
                 <TextInput
                     label="Phone Number"
-                    placeholder="e.g. 0123456789"
+                    placeholder="e.g. +60123456789"
                     keyboardType="phone-pad"
                     value={phone}
                     onChangeText={setPhone}

@@ -16,6 +16,20 @@ export const useContacts = () => {
     const [loading, setLoading] = useState(true);
     const [permissionGranted, setPermissionGranted] = useState(false);
 
+    const normalizePhone = (phone?: string): string | undefined => {
+        if (!phone) return undefined;
+
+        // Remove spaces, hyphens, and parentheses
+        let cleaned = phone.replace(/[\s-()]/g, "");
+
+        // Add "+" if not present at start
+        if (!cleaned.startsWith("+")) {
+            cleaned = "+" + cleaned;
+        }
+
+        return cleaned;
+    };
+
     const loadContacts = async () => {
         setLoading(true);
 
@@ -42,7 +56,7 @@ export const useContacts = () => {
                     .map((c) => ({
                         id: c.id,
                         name: c.name ?? "",
-                        phone: c.phoneNumbers?.[0]?.number,
+                        phone: normalizePhone(c.phoneNumbers?.[0]?.number),
                         email: c.emails?.[0]?.email,
                     }));
 

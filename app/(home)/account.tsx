@@ -1,15 +1,11 @@
-import { Container, Screen, Text } from '@/components'
+import { ComingSoon, Container, Screen } from '@/components'
 import React from 'react'
 
 const Account = () => {
     return (
         <Screen>
-            <Container style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-            }} >
-                <Text>Account</Text>
+            <Container style={{ flex: 1 }} >
+                <ComingSoon />
             </Container>
         </Screen>
     )

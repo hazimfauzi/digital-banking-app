@@ -1,7 +1,8 @@
-import { Container, Screen, Text } from "@/components";
+import { Button, Container, Screen, Text, TextInput } from "@/components";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
+import { Avatar, Card } from "react-native-paper";
 
 const TransferAmountScreen = () => {
   const router = useRouter();
@@ -36,26 +37,33 @@ const TransferAmountScreen = () => {
     <Screen>
       <Container style={{ flex: 1, padding: 20 }}>
         {/* Header */}
-        <View style={{ marginBottom: 24 }}>
+        <View style={{ marginBottom: 10 }}>
           <Text style={{ fontSize: 16, color: "#888" }}>Transfer to</Text>
-          <Text style={{ fontSize: 20, fontWeight: "700", marginTop: 4 }}>
-            {contactName || "Unknown Contact"}
-          </Text>
-          {contactPhone && (
-            <Text style={{ color: "#666", marginTop: 2 }}>{contactPhone}</Text>
-          )}
+          <Card
+            style={{
+              borderRadius: 15,
+              backgroundColor: "white",
+              marginBottom: 24,
+              elevation: 2,
+            }}
+          >
+            <Card.Title
+              title={contactName || "Unknown Contact"}
+              subtitle={`${contactPhone}`}
+              left={(props) => <Avatar.Icon {...props} icon="account" />}
+            />
+          </Card>
         </View>
 
         {/* Current Balance */}
         <View style={{ marginBottom: 20 }}>
-          <Text style={{ color: "#888" }}>Current Balance</Text>
-          <Text style={{ fontSize: 28, fontWeight: "700", marginTop: 4 }}>
+          <Text variant={'labelMedium'} style={{ color: "#888" }}>Current Balance</Text>
+          <Text variant={'bodyLarge'}>
             RM {balance.toFixed(2)}
           </Text>
         </View>
 
-        {/* Amount Input */}
-        <Text style={{ fontSize: 16, color: "#444", marginBottom: 8 }}>
+        <Text variant={'labelMedium'} style={{ color: "#888" }}>
           Enter Amount
         </Text>
         <TextInput
@@ -64,19 +72,11 @@ const TransferAmountScreen = () => {
           placeholder="0.00"
           keyboardType="numeric"
           style={{
-            borderWidth: 1,
-            borderColor: "#ddd",
-            borderRadius: 12,
-            padding: 14,
-            fontSize: 22,
-            fontWeight: "600",
-            textAlign: "center",
-            marginBottom: 24,
+            marginBottom: 30,
           }}
         />
 
-        {/* Note Input */}
-        <Text style={{ fontSize: 16, color: "#444", marginBottom: 8 }}>
+        <Text variant={'labelMedium'} style={{ color: "#888" }}>
           Note (optional)
         </Text>
         <TextInput
@@ -84,29 +84,13 @@ const TransferAmountScreen = () => {
           onChangeText={setNote}
           placeholder="Add a note..."
           style={{
-            borderWidth: 1,
-            borderColor: "#ddd",
-            borderRadius: 12,
-            padding: 14,
-            fontSize: 16,
             marginBottom: 40,
           }}
         />
 
-        {/* Continue Button */}
-        <TouchableOpacity
+        <Button
           onPress={handleContinue}
-          style={{
-            backgroundColor: "#27496D",
-            paddingVertical: 16,
-            borderRadius: 12,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#fff", fontSize: 18, fontWeight: "600" }}>
-            Continue
-          </Text>
-        </TouchableOpacity>
+        >Continue</Button>
       </Container>
     </Screen>
   );

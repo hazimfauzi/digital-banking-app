@@ -19,7 +19,7 @@ This is Take Home Assessmeont for Payment Transfer Module with Biometrics Authen
    ```
 
 ## Download
-https://expo.dev/artifacts/eas/47Ex8xVzdYTEqzgyGFwSVk.apk
+Android: [Digital Banking App](https://expo.dev/artifacts/eas/47Ex8xVzdYTEqzgyGFwSVk.apk)
 
 ## Features
 

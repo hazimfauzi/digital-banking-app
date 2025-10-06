@@ -18,6 +18,7 @@ export default function DefaultLayout() {
         <Stack.Screen name="transferAmount" options={{ title: "Transfer" }} />
         <Stack.Screen name="transferConfirm" options={{ title: "Transfer" }} />
         <Stack.Screen name="transferContact" options={{ title: "Transfer" }} />
+        <Stack.Screen name="transferResult" options={{ title: "Receipt" }} />
         <Stack.Screen name="notification" options={{ title: "Notification" }} />
         <Stack.Screen name="manageAccount" options={{ title: "Edit Details" }} />
     </Stack>;

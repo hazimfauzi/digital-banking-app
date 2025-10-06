@@ -1,10 +1,11 @@
 import { defaultApi } from "@/api/axiosClient";
-import { Container, Screen, Text, TextInput } from "@/components";
+import { Button, Container, Screen, Text, TextInput } from "@/components";
 import { useAuth } from "@/context";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, Modal, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, View } from "react-native";
+import { Avatar, Card } from "react-native-paper";
 
 const TransferConfirmScreen = () => {
     const router = useRouter();
@@ -123,57 +124,45 @@ const TransferConfirmScreen = () => {
                 </Text>
 
                 {/* Transfer Details */}
-                <View
-                    style={{
-                        backgroundColor: "#f9f9f9",
-                        borderRadius: 12,
-                        padding: 16,
-                        marginBottom: 24,
-                    }}
-                >
-                    <Text>Recipient</Text>
-                    <Text style={{ fontWeight: "600" }}>{contactName}</Text>
-                    {contactPhone && <Text>{contactPhone}</Text>}
-
-                    <View
-                        style={{ height: 1, backgroundColor: "#eee", marginVertical: 12 }}
-                    />
-
-                    <Text>Amount</Text>
-                    <Text style={{ fontWeight: "700", color: "#27496D" }}>
-                        RM {amount}
-                    </Text>
-
-                    {note && (
-                        <>
-                            <View
-                                style={{ height: 1, backgroundColor: "#eee", marginVertical: 12 }}
+                <View >
+                    <View style={{ marginBottom: 20 }}>
+                        <Text style={{ fontSize: 16, color: "#888" }}>Recipient</Text>
+                        <Card
+                            style={{
+                                borderRadius: 15,
+                                backgroundColor: "white",
+                                elevation: 2,
+                            }}
+                        >
+                            <Card.Title
+                                title={contactName || "Unknown Contact"}
+                                subtitle={contactPhone || "No phone"}
+                                left={(props) => <Avatar.Icon {...props} icon="account" />}
                             />
-                            <Text>Note</Text>
-                            <Text>{note}</Text>
-                        </>
-                    )}
+                        </Card>
+                    </View>
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={{ fontSize: 16, color: "#888" }}>Amount</Text>
+                        <Text variant='bodyLarge' style={{ fontWeight: "700", color: "#27496D" }}>
+                            RM {amount}
+                        </Text>
+                    </View>
+
+                    {note && <View style={{ marginBottom: 20 }}>
+                        <Text style={{ fontSize: 16, color: "#888" }}>Note</Text>
+                        <Text variant='bodyLarge' style={{ fontWeight: "700", color: "#27496D" }}>
+                            {note}
+                        </Text>
+                    </View>}
                 </View>
 
                 {/* Confirm Button */}
-                <TouchableOpacity
-                    disabled={loading}
+                <Button
+                    loading={loading}
                     onPress={handleConfirm}
-                    style={{
-                        backgroundColor: "#27496D",
-                        paddingVertical: 16,
-                        borderRadius: 12,
-                        alignItems: "center",
-                    }}
                 >
-                    {loading ? (
-                        <ActivityIndicator color="#fff" />
-                    ) : (
-                        <Text style={{ color: "#fff", fontWeight: "600" }}>
-                            Confirm & Send
-                        </Text>
-                    )}
-                </TouchableOpacity>
+                    Confirm & Send
+                </Button>
             </Container>
 
             {/* PIN Fallback Modal */}
@@ -206,34 +195,20 @@ const TransferConfirmScreen = () => {
                             secureTextEntry
                             keyboardType="numeric"
                             style={{
-                                borderWidth: 1,
-                                borderColor: "#ddd",
-                                borderRadius: 12,
-                                padding: 14,
-                                fontSize: 20,
-                                textAlign: "center",
                                 marginBottom: 20,
                             }}
                         />
-
-                        <TouchableOpacity
+                        <Button
                             onPress={handlePinSubmit}
-                            style={{
-                                backgroundColor: "#27496D",
-                                paddingVertical: 14,
-                                borderRadius: 12,
-                                alignItems: "center",
-                            }}
                         >
-                            <Text style={{ color: "#fff", fontWeight: "600" }}>Confirm</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
+                            Confirm
+                        </Button>
+                        <Button
+                            mode={'text'}
                             onPress={() => setShowPinModal(false)}
-                            style={{ marginTop: 16, alignItems: "center" }}
                         >
-                            <Text style={{ color: "#888" }}>Cancel</Text>
-                        </TouchableOpacity>
+                            Cancel
+                        </Button>
                     </View>
                 </View>
             </Modal>

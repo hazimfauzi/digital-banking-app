@@ -40,7 +40,7 @@ const LoginScreen = () => {
                 <TextInput
                     label="Phone Number"
                     placeholder="e.g. 60123456789"
-                    keyboardType="phone-pad"
+                    keyboardType="numeric"
                     value={phone}
                     onChangeText={setPhone}
                     style={{ marginBottom: 16 }}
@@ -49,6 +49,7 @@ const LoginScreen = () => {
                 <TextInput
                     label="PIN"
                     placeholder="Enter 4-digit PIN"
+                    keyboardType="numeric"
                     secureTextEntry
                     value={pin}
                     onChangeText={setPin}

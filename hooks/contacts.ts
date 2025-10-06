@@ -1,5 +1,6 @@
+import { setUserData } from "@/api/storage";
+import { useAuth } from "@/context";
 import { formatPhoneNumber } from "@/utils/phoneNumber";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Contacts from "expo-contacts";
 import { useEffect, useState } from "react";
 
@@ -10,30 +11,31 @@ export type ContactInfo = {
     email?: string;
 };
 
-const STORAGE_KEY = "CONTACTS_PERMISSION_GRANTED";
-
 export const useContacts = () => {
+    const { user } = useAuth();
     const [contacts, setContacts] = useState<ContactInfo[]>([]);
     const [loading, setLoading] = useState(true);
     const [permissionGranted, setPermissionGranted] = useState(false);
 
     const loadContacts = async () => {
+        if (!user) return;
+
         setLoading(true);
 
         try {
-            const storedStatus = await AsyncStorage.getItem(STORAGE_KEY);
-            let finalStatus: "granted" | "denied" = storedStatus === "true" ? "granted" : "denied";
+            let finalStatus: "granted" | "denied" = user.contactEnabled ? "granted" : "denied";
 
             if (finalStatus !== "granted") {
                 const { status } = await Contacts.requestPermissionsAsync();
                 finalStatus = status === "granted" ? "granted" : "denied";
-                await AsyncStorage.setItem(STORAGE_KEY, status === "granted" ? "true" : "false");
+
+                // Save user contactEnabled flag
+                await setUserData(user.phone, { contactEnabled: finalStatus === "granted" });
             }
 
             if (finalStatus === "granted") {
                 setPermissionGranted(true);
 
-                // Fetch contacts
                 const { data } = await Contacts.getContactsAsync({
                     fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails],
                 });
@@ -60,8 +62,8 @@ export const useContacts = () => {
     };
 
     useEffect(() => {
-        loadContacts();
-    }, []);
+        if (user) loadContacts();
+    }, [user]);
 
     return { contacts, loading, permissionGranted, reload: loadContacts };
 };

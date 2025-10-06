@@ -24,6 +24,7 @@ export type UserData = {
     phone: string;
     pin: string;
     biometricEnabled: boolean;
+    contactEnabled: boolean;
     totalBalance: number;
     recentContacts: Contact[];
     transactions: Transaction[];
@@ -44,6 +45,7 @@ export const setUserData = async (phone: string, newData: Partial<UserData>) => 
         phone,
         pin: "",
         biometricEnabled: false,
+        contactEnabled: true,
         totalBalance: 0,
         recentContacts: [],
     };

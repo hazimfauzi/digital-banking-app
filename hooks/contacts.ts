@@ -1,3 +1,4 @@
+import { formatPhoneNumber } from "@/utils/phoneNumber";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Contacts from "expo-contacts";
 import { useEffect, useState } from "react";
@@ -15,20 +16,6 @@ export const useContacts = () => {
     const [contacts, setContacts] = useState<ContactInfo[]>([]);
     const [loading, setLoading] = useState(true);
     const [permissionGranted, setPermissionGranted] = useState(false);
-
-    const normalizePhone = (phone?: string): string | undefined => {
-        if (!phone) return undefined;
-
-        // Remove spaces, hyphens, and parentheses
-        let cleaned = phone.replace(/[\s-()]/g, "");
-
-        // Add "+" if not present at start
-        if (!cleaned.startsWith("+")) {
-            cleaned = "+" + cleaned;
-        }
-
-        return cleaned;
-    };
 
     const loadContacts = async () => {
         setLoading(true);
@@ -56,7 +43,7 @@ export const useContacts = () => {
                     .map((c) => ({
                         id: c.id,
                         name: c.name ?? "",
-                        phone: normalizePhone(c.phoneNumbers?.[0]?.number),
+                        phone: formatPhoneNumber(c.phoneNumbers?.[0]?.number),
                         email: c.emails?.[0]?.email,
                     }));
 

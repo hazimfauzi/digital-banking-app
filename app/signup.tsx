@@ -1,8 +1,10 @@
 import { Button, Container, Screen, Text, TextInput } from "@/components";
 import { useAuth } from "@/context/AuthContext";
+import { isValidPhoneNumber } from "@/utils/phoneNumber";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
+import { HelperText } from "react-native-paper";
 
 const SignupScreen = () => {
     const router = useRouter();
@@ -46,19 +48,25 @@ const SignupScreen = () => {
                     style={{ marginBottom: 16 }}
                 />
 
-                <TextInput
-                    label="Phone Number"
-                    placeholder="e.g. +60123456789"
-                    keyboardType="phone-pad"
-                    value={phone}
-                    onChangeText={setPhone}
-                    style={{ marginBottom: 16 }}
-                />
+                <View style={{ marginBottom: 5 }}>
+                    <TextInput
+                        label="Phone Number"
+                        placeholder="e.g. 60123456789"
+                        keyboardType="numeric"
+                        value={phone}
+                        error={!isValidPhoneNumber(phone)}
+                        onChangeText={setPhone}
+                    />
+                    <HelperText type="error" visible={!isValidPhoneNumber(phone)}>
+                        Not valid phone number
+                    </HelperText>
+                </View>
 
                 <TextInput
                     label="PIN"
                     placeholder="Choose 4-digit PIN"
                     secureTextEntry
+                    keyboardType="numeric"
                     value={pin}
                     maxLength={4}
                     onChangeText={setPin}

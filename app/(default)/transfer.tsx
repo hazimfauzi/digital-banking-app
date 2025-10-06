@@ -1,10 +1,11 @@
 import { defaultApi } from "@/api/axiosClient";
 import { Button, Container, IconButton, Screen, Text, TextInput } from "@/components";
 import { useAuth } from "@/context";
+import { isValidPhoneNumber } from "@/utils/phoneNumber";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native";
-import { Avatar } from "react-native-paper";
+import { Avatar, HelperText } from "react-native-paper";
 
 type Contact = {
     name: string;
@@ -156,14 +157,19 @@ const TransferScreen = () => {
                     style={{ marginBottom: 12 }}
                 />
 
-                <TextInput
-                    label="Phone Number"
-                    value={phone}
-                    onChangeText={setPhone}
-                    placeholder="Phone Number"
-                    keyboardType="phone-pad"
-                    style={{ marginBottom: 20 }}
-                />
+                <View style={{ marginBottom: 5 }}>
+                    <TextInput
+                        label="Phone Number"
+                        value={phone}
+                        onChangeText={setPhone}
+                        error={!isValidPhoneNumber(phone)}
+                        placeholder="e.g. 60123456789"
+                        keyboardType="numeric"
+                    />
+                    <HelperText type="error" visible={!isValidPhoneNumber(phone)}>
+                        Not valid phone number
+                    </HelperText>
+                </View>
 
                 <Button onPress={handleNext}>Next</Button>
             </Container>

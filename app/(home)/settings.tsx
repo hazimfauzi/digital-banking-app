@@ -1,4 +1,4 @@
-import api from "@/api/mock";
+import { defaultApi } from "@/api/axiosClient";
 import { Button, Container, Screen } from "@/components";
 import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
@@ -18,7 +18,7 @@ const Settings = () => {
             setLoading(true);
             setBiometricEnabled(value);
 
-            await api.post("/biometric/enable", { phone: user.phone, enabled: value });
+            await defaultApi.post("/biometric/enable", { phone: user.phone, enabled: value });
 
             await updateUser({ biometricEnabled: value });
 

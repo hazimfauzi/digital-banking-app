@@ -1,4 +1,4 @@
-import { api } from "@/api/mock";
+import { defaultApi } from "@/api/axiosClient";
 import { UserData } from "@/api/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // 🔐 Login
     const login = async (phone: string, pin: string) => {
         try {
-            const res = await api.post("/login", { phone, pin });
+            const res = await defaultApi.post("/login", { phone, pin });
             const userData = res.data.user;
             await AsyncStorage.setItem("session", JSON.stringify(userData));
             setUser(userData);
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // 🆕 Signup
     const signup = async (name: string, phone: string, pin: string) => {
         try {
-            const res = await api.post("/signup", { name, phone, pin });
+            const res = await defaultApi.post("/signup", { name, phone, pin });
             const userData = res.data.user;
             await AsyncStorage.setItem("session", JSON.stringify(userData));
             setUser(userData);

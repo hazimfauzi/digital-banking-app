@@ -1,4 +1,4 @@
-import '@/api/mock'; // Import the mock API to initialize it
+import '@/api/mock';
 import { toastConfig } from '@/components/feedback/toastConfig';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { registerForPushNotificationsAsync } from '@/hooks/notification';

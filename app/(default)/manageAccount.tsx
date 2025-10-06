@@ -1,4 +1,4 @@
-import { api } from "@/api/mock";
+import { defaultApi } from "@/api/axiosClient";
 import { Button, Container, Screen, TextInput } from "@/components";
 import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
@@ -16,7 +16,7 @@ const ManageAccountScreen = () => {
     const handleUpdate = async () => {
         try {
             setLoading(true);
-            const res = await api.post("/user/update", { phone: user.phone, name, pin });
+            const res = await defaultApi.post("/user/update", { phone: user.phone, name, pin });
 
             // Update session locally
             await updateUser(res.data.user);

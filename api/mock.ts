@@ -1,13 +1,8 @@
 import { UserData, getUserData, setUserData } from "@/api/storage";
-import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
+import { defaultApi } from "./axiosClient";
 
-export const api = axios.create({
-    baseURL: "https://mock.digitalbank.local",
-    timeout: 500,
-});
-
-const mock = new MockAdapter(api, { delayResponse: 500 });
+const mock = new MockAdapter(defaultApi, { delayResponse: 500 });
 const randomId = () => Math.random().toString(36).substring(2, 10);
 
 // ✅ Signup
@@ -131,5 +126,3 @@ mock.onPost("/user/update").reply(async (config) => {
 
 
 console.log("✅ Mock API initialized with local storage backend");
-
-export default api;

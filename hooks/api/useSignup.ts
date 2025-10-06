@@ -1,4 +1,4 @@
-import { api } from "@/api/mock";
+import { defaultApi } from "@/api/axiosClient";
 import { useMutation } from "@tanstack/react-query";
 
 type SignupPayload = {
@@ -10,7 +10,7 @@ type SignupPayload = {
 export const useSignup = () => {
     return useMutation({
         mutationFn: async (data: SignupPayload) => {
-            const res = await api.post("/signup", data);
+            const res = await defaultApi.post("/signup", data);
             return res.data;
         },
     });

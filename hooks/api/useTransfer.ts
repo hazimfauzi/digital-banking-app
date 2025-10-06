@@ -1,4 +1,4 @@
-import { api } from "@/api/mock";
+import { defaultApi } from "@/api/axiosClient";
 import { useMutation } from "@tanstack/react-query";
 
 type TransferPayload = {
@@ -11,7 +11,7 @@ type TransferPayload = {
 export const useTransfer = () => {
     return useMutation({
         mutationFn: async (data: TransferPayload) => {
-            const res = await api.post("/transfer", data);
+            const res = await defaultApi.post("/transfer", data);
             return res.data;
         },
     });

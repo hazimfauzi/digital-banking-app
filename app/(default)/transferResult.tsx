@@ -1,7 +1,8 @@
 import { Button, Container, Screen, Text } from "@/components";
+import { sendLocalNotification } from "@/hooks/notification";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 
 const TransferResultScreen = () => {
@@ -19,6 +20,15 @@ const TransferResultScreen = () => {
     }>();
 
     const isSuccess = status === "success";
+
+    useEffect(() => {
+        sendLocalNotification(
+            isSuccess ? "Transfer Successful" : "Transfer Failed",
+            isSuccess
+                ? `You’ve successfully sent RM ${amount} to ${contactName}.`
+                : `Your transfer of RM ${amount} to ${contactName} could not be completed.`
+        )
+    }, [])
 
     return (
         <Screen>

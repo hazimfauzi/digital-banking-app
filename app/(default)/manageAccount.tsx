@@ -3,7 +3,7 @@ import { Button, Container, Screen, TextInput } from "@/components";
 import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 const ManageAccountScreen = () => {
     const { user, updateUser } = useAuth();
@@ -20,12 +20,18 @@ const ManageAccountScreen = () => {
 
             // Update session locally
             await updateUser(res.data.user);
-
-
-            Alert.alert("Success", "Account updated successfully!");
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: 'Account updated successfully!'
+            });
             router.back();
         } catch (err: any) {
-            Alert.alert("Error", err.message || "Failed to update account");
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: err.message || "Failed to update account"
+            });
         } finally {
             setLoading(false);
         }

@@ -3,8 +3,9 @@ import { useAuth } from "@/context/AuthContext";
 import { isValidPhoneNumber } from "@/utils/phoneNumber";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { HelperText } from "react-native-paper";
+import Toast from "react-native-toast-message";
 
 const SignupScreen = () => {
     const router = useRouter();
@@ -17,17 +18,29 @@ const SignupScreen = () => {
 
     const handleSignup = async () => {
         if (!name || !phone || !pin) {
-            Alert.alert("Missing Fields", "Please fill in all fields.");
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Fields',
+                text2: 'Please fill in all fields.'
+            });
             return;
         }
 
         try {
             setLoading(true);
             await signup(name, phone, pin);
-            Alert.alert("Success", "Account created successfully!");
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: 'Account created successfully!'
+            });
             router.replace("/home");
         } catch (err: any) {
-            Alert.alert("Signup Failed", err.message);
+            Toast.show({
+                type: 'error',
+                text1: 'Signup Failed',
+                text2: err.message
+            });
         } finally {
             setLoading(false);
         }

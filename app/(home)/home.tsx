@@ -1,4 +1,4 @@
-import { Container, IconButton, Screen, Text } from "@/components";
+import { BiometricPrompt, Container, IconButton, Screen, Text } from "@/components";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/hooks/api/useUser";
 import { router } from "expo-router";
@@ -135,6 +135,7 @@ const Home = () => {
                     </View>
                 )}
             </Container>
+            <BiometricPrompt />
         </Screen>
     );
 };

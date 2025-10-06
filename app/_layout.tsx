@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   MD3LightTheme as DefaultTheme, PaperProvider
 } from 'react-native-paper';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import '../i18n';
 
@@ -36,6 +36,7 @@ Notifications.setNotificationHandler({
 });
 
 export default function Root() {
+  const insets = useSafeAreaInsets();
   useEffect(() => {
     registerForPushNotificationsAsync();
   }, []);
@@ -46,7 +47,7 @@ export default function Root() {
         <SafeAreaProvider>
           <PaperProvider theme={theme}>
             <RootNavigator />
-            <Toast config={toastConfig} topOffset={150} />
+            <Toast config={toastConfig} topOffset={insets.top} />
           </PaperProvider>
         </SafeAreaProvider>
       </AuthProvider>

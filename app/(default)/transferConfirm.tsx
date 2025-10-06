@@ -4,8 +4,9 @@ import { useAuth } from "@/context";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Modal, View } from "react-native";
+import { Modal, View } from "react-native";
 import { Avatar, Card } from "react-native-paper";
+import Toast from "react-native-toast-message";
 
 const TransferConfirmScreen = () => {
     const router = useRouter();
@@ -53,7 +54,11 @@ const TransferConfirmScreen = () => {
     // 🔹 If biometric unavailable or disabled
     const handlePinFallback = () => {
         if (!user?.pin) {
-            Alert.alert("PIN not set", "Please set your account PIN first.");
+            Toast.show({
+                type: 'error',
+                text1: 'PIN not set',
+                text2: 'Please set your account PIN first.'
+            });
             return;
         }
         setShowPinModal(true);
@@ -65,7 +70,11 @@ const TransferConfirmScreen = () => {
             setShowPinModal(false);
             await handleTransfer();
         } else {
-            Alert.alert("Invalid PIN", "Please try again.");
+            Toast.show({
+                type: 'error',
+                text1: 'Invalid PIN',
+                text2: 'Please try again.'
+            });
             setPin("");
         }
     };
@@ -73,7 +82,11 @@ const TransferConfirmScreen = () => {
     // 🔹 Call mock API for transfer
     const handleTransfer = async () => {
         if (!user?.phone || !contactPhone) {
-            Alert.alert("Error", "Missing transfer information.");
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Missing transfer information.'
+            });
             return;
         }
 

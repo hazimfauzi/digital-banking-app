@@ -3,8 +3,8 @@ import { Button, Container, Screen } from "@/components";
 import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert } from "react-native";
 import { Avatar, Card, Switch } from "react-native-paper";
+import Toast from "react-native-toast-message";
 
 const Settings = () => {
     const { user, logout, updateUser } = useAuth();
@@ -22,9 +22,17 @@ const Settings = () => {
 
             await updateUser({ biometricEnabled: value });
 
-            Alert.alert("Success", `Biometric login ${value ? "enabled" : "disabled"}`);
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: `Biometric authentication ${value ? "enabled" : "disabled"}`
+            });
         } catch (err: any) {
-            Alert.alert("Error", err.message || "Failed to update biometric setting");
+            Toast.show({
+                type: 'success',
+                text1: 'Error',
+                text2: err.message || "Failed to update biometric setting"
+            });
         } finally {
             setLoading(false);
         }

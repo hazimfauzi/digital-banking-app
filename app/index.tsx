@@ -2,7 +2,7 @@ import { Button, Container, Screen, Text, TextInput } from "@/components";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 const LoginScreen = () => {
     const router = useRouter();
@@ -14,17 +14,29 @@ const LoginScreen = () => {
 
     const handleLogin = async () => {
         if (!phone || !pin) {
-            Alert.alert("Missing Fields", "Please enter your phone number and PIN.");
+            Toast.show({
+                type: 'error',
+                text1: 'Missing Fields',
+                text2: 'Please enter your phone number and PIN.'
+            });
             return;
         }
 
         try {
             setLoading(true);
             await login(phone, pin);
-            Alert.alert("Success", "Logged in successfully!");
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: 'Logged in successfully!'
+            });
             router.replace('/home'); // Redirect to home after login
         } catch (err: any) {
-            Alert.alert("Login Failed", err.message);
+            Toast.show({
+                type: 'error',
+                text1: 'Login Failed',
+                text2: err.message
+            });
         } finally {
             setLoading(false);
         }

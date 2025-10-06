@@ -54,7 +54,7 @@ https://expo.dev/artifacts/eas/47Ex8xVzdYTEqzgyGFwSVk.apk
 
 
 ## Demo
-
+https://drive.google.com/drive/folders/1fXPR9teGGtABqC-qqPx8Kjv3RaxGLk2_
 
 ## Challenges Faced During Development
 
